@@ -9,34 +9,53 @@ class App extends Component {
   // data resides here
   state = {
     persons: [
-      { name:"Manolo", age:"23" }, // this.state.persons[0].name
-      { name:"Nadia", age:"34" },
-      { name:"Camper", age:"12" }
+      { id: "iyfr", name:"Manolo", age:"23" }, // this.state.persons[0].name
+      { id: "r", name:"Nadia", age:"34" },
+      { id: "ir", name:"Camper", age:"12" }
     ],
-    otherState: 'different value here'
+    otherState: 'different value here',
+    showPersons: false
   }
-  // handler used to switch state
-  switchNameHandler = (newName) => {
-    // console.log("clicked!")
-    // DON`T DO THIS!!! this.state.persons[0].name = "new name";
-    this.setState({
-      persons: [
-        { name: newName, age:"90" },
-        { name:"Nadia", age:"34" },
-        { name:"Camper", age:"12" }
-      ]
+  //
+  nameChangeHandler = ( event, id ) => {
+    const personIndex = this.state.persons.findIndex(p => {
+      return p.id === id;
     });
+    // make a copy using ES6 Spread operator
+    const person = {
+      ...this.state.persons[personIndex]
+    }
+
+    //const person = Object.assign({}, this.state.persons[personIndex]);
+
+    person.name = event.target.value;
+
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+
+    this.setState({persons: persons});
   }
-  // handler used tu switch state but assigned to a different element/event
-  nameChangeHandler = (event) => {
-    this.setState({
-      persons: [
-        { name: "Manolo", age:"90" },
-        { name: event.target.value, age:"34" },
-        { name: "Camper", age:"12" }
-      ]
-    });
+  //
+  deletePersonHandler = ( personIndex ) => {
+    // fetch all persons and make a copy of the array using slice()
+    // const persons = this.state.persons.slice();
+    // create a new array with the ES6 Spread operator without mutating the original array
+    const persons = [...this.state.persons];
+    // removes one element from the array
+    persons.splice(personIndex, 1);
+    // which was updated by splicing one element?
+    this.setState({persons: persons});
   }
+
+  // conditional test handler
+  togglePersonsHandler = () => {
+    const doesShow = this.state.showPersons;
+    // showPersons equals doesShow is not
+    // when this changes the other parts of state (persons and otherState)
+    // will just untouched: merged!!
+    this.setState({showPersons: !doesShow});
+  }
+
   // render DOM
   render() {
     // inline styles
@@ -46,33 +65,36 @@ class App extends Component {
       border: '1px solid blue',
       padding: '8px',
       cursor: 'pointer'
-    };
+    }
+
+    // using javascript for conditional DOM
+    // before the return key
+    let persons = null;
+    if ( this.state.showPersons ) {
+      persons = (
+        <div>
+          {/* map() maps given array elemens into something else*/}
+          {this.state.persons.map(( person, index ) => {
+            return <Person
+              click={() => this.deletePersonHandler(index)}
+              name={person.name}
+              age={person.age}
+              key={person.id}
+              changed={( event ) => this.nameChangeHandler(event, person.id)} />;
+          })}
+        </div>
+      );
+    }
+
     // DOM
     return (
       <div className="App">
         <h1>Hi this is me in React: boom!</h1>
-
         <button
           style={style}
-          onClick={() => this.switchNameHandler('CHANGE FROM BUTTON')}>
-            Switch First Person Name</button>
-
-        <Person
-          name={this.state.persons[0].name}
-          age={this.state.persons[0].age}/>
-
-        <Person
-          name={this.state.persons[1].name}
-          age={this.state.persons[1].age}
-          // passing method reference to different component using Props (click)
-          click={this.switchNameHandler.bind(this, 'CHANGE FROM PARAGRAPH')}
-          changed={this.nameChangeHandler} >
-            Inner html {this.state.otherState}
-        </Person>
-
-        <Person
-          name={this.state.persons[2].name}
-          age={this.state.persons[2].age}/>
+          onClick={this.togglePersonsHandler}>
+            Toggle Persons</button>
+          {persons}
       </div>
     );
   }
