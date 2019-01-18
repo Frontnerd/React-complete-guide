@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import './App.css';
-import Person from './Person/Person';
-import './Person/Person.css';
+import classes from './App.css';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
 
 class App extends Component {
-  // state is only available in components that are extending React componets (App<Component<React)
+
+  // STATE is only available in components that are extending React componets (App<Component<React)
   // and not in functions components (Person)
   // data resides here
   state = {
@@ -16,7 +17,13 @@ class App extends Component {
     otherState: 'different value here',
     showPersons: false
   }
-  //
+
+
+
+
+
+  // METHODS
+
   nameChangeHandler = ( event, id ) => {
     const personIndex = this.state.persons.findIndex(p => {
       return p.id === id;
@@ -56,6 +63,10 @@ class App extends Component {
     this.setState({showPersons: !doesShow});
   }
 
+
+
+
+
   // render DOM
   render() {
     // inline styles
@@ -71,30 +82,22 @@ class App extends Component {
     // before the return key
     let persons = null;
     if ( this.state.showPersons ) {
-      persons = (
-        <div>
-          {/* map() maps given array elemens into something else*/}
-          {this.state.persons.map(( person, index ) => {
-            return <Person
-              click={() => this.deletePersonHandler(index)}
-              name={person.name}
-              age={person.age}
-              key={person.id}
-              changed={( event ) => this.nameChangeHandler(event, person.id)} />;
-          })}
-        </div>
-      );
+      persons = <Persons
+            persons={this.state.persons}
+            clicked={this.deletePersonHandler}
+            changed={this.nameChangeHandler} />;
     }
 
-    // DOM
+
+
+    // DOM NOW!
     return (
-      <div className="App">
-        <h1>Hi this is me in React: boom!</h1>
-        <button
-          style={style}
-          onClick={this.togglePersonsHandler}>
-            Toggle Persons</button>
-          {persons}
+      <div className={classes.App}>
+        <Cockpit
+          showpersons={this.state.showPersons}
+          persons={this.state.persons}
+          clicked={this.togglePersonsHandler} />
+        {persons}
       </div>
     );
   }

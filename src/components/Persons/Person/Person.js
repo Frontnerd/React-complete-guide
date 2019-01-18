@@ -1,4 +1,5 @@
 import React from 'react';
+import './Person.css';
 
 // States changes are made in the App (which is a class component)
 // Props are the way to access data from outside
