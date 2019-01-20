@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import classes from './App.css';
+import classes from './App.module.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 
@@ -69,14 +69,6 @@ class App extends Component {
 
   // render DOM
   render() {
-    // inline styles
-    const style = {
-      backgroudnColor: "#333",
-      font: 'inherit',
-      border: '1px solid blue',
-      padding: '8px',
-      cursor: 'pointer'
-    }
 
     // using javascript for conditional DOM
     // before the return key
