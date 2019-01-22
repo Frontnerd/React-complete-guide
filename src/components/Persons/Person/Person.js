@@ -1,20 +1,32 @@
-import React from 'react';
+import React, {Component} from 'react';
 import classes from './Person.module.css';
+import withClass from '../../../hoc/withClass';
+import Aux from '../../../hoc/Aux';
 
-// States changes are made in the App (which is a class component)
-// Props are the way to access data from outside
-// and shoult stay as simple as possible for usability reasons
-const person = ( props ) => {
-  return (
-    <div className={classes.Person}>
-      {/* you can`t acces event handles in this file
-          you have to use props instead (props.click) */}
-      <p onClick={props.click}>I am a {props.name} and I am {props.age} years old!</p>
-      <p>{props.children}</p>
-      { /* onChange represend a second way to bind */ }
-      <input type="text" onChange={props.changed} value={props.name}/>
-    </div>
-  )
+class Person extends Component {
+  // CONSTRUCTOR
+  constructor(props) {
+    super(props);
+    console.log("  1 person *********")
+  }
+  //
+  componentWillMount () {
+    console.log("  2 person componentWillMount");
+  }
+  //
+  componentDidMount () {
+    console.log("  4 person componentDidMount");
+  }
+  render () {
+    console.log("  3 person RENDER");
+    return (
+      <Aux>
+        <p onClick={this.props.click}>I am a {this.props.name} and I am {this.props.age} years old!</p>
+        <p>{this.props.children}</p>
+        <input type="text" onChange={this.props.changed} value={this.props.name}/>
+      </Aux>
+    )
+  }
 }
 
-export default person;
+export default withClass(Person, classes.Person);

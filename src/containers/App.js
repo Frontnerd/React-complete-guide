@@ -1,29 +1,46 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import classes from './App.module.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
+import Aux from '../hoc/Aux';
+import withClass from '../hoc/withClass';
 
-class App extends Component {
-
-  // STATE is only available in components that are extending React componets (App<Component<React)
-  // and not in functions components (Person)
-  // data resides here
-  state = {
-    persons: [
-      { id: "iyfr", name:"Manolo", age:"23" }, // this.state.persons[0].name
-      { id: "r", name:"Nadia", age:"34" },
-      { id: "ir", name:"Camper", age:"12" }
-    ],
-    otherState: 'different value here',
-    showPersons: false
+class App extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      persons: [
+        { id: "iyfr", name:"Manolo", age:"23" },
+        { id: "r", name:"Nadia", age:"34" },
+        { id: "ir", name:"Camper", age:"12" }
+      ],
+      otherState: 'different value here',
+      showPersons: false
+    };
   }
 
-
-
-
+  // MOUNT lifecycle
+  componentWillMount() {
+    console.log("<< APP WILL MOUNT ====== componentWillMount")
+  }
+  componentDidMount() {
+    console.log("<< APP DID MOUNT ====== componentDidMount")
+  }
+  // UPDATE lifecycle
+  // shouldComponentUpdate (nextProps, nextState) {
+  //   console.log("<< APP SHOULD UPDATE ====== shouldComponentUpdate", nextProps, nextState)
+  //   // continue only if changes [test: click twice Show Person button after loading app]
+  //   return nextState.persons !== this.state.persons ||
+  //          nextState.showPersons !== this.state.showPersons;
+  // }
+  conponentWillUpdate () {
+    console.log("<< APP WILL UPDATE ====== conponentWillUpdate")
+  }
+  componentDidUpdate () {
+    console.log("<< APP DID UPDATE ====== conponentDidUpdate")
+  }
 
   // METHODS
-
   nameChangeHandler = ( event, id ) => {
     const personIndex = this.state.persons.findIndex(p => {
       return p.id === id;
@@ -53,7 +70,7 @@ class App extends Component {
     // which was updated by splicing one element?
     this.setState({persons: persons});
   }
-
+WithClass
   // conditional test handler
   togglePersonsHandler = () => {
     const doesShow = this.state.showPersons;
@@ -63,13 +80,8 @@ class App extends Component {
     this.setState({showPersons: !doesShow});
   }
 
-
-
-
-
   // render DOM
   render() {
-
     // using javascript for conditional DOM
     // before the return key
     let persons = null;
@@ -80,19 +92,19 @@ class App extends Component {
             changed={this.nameChangeHandler} />;
     }
 
-
-
     // DOM NOW!
     return (
-      <div className={classes.App}>
+      <Aux>
+        <button onClick={() => (this.setState({showPersons: true}))}>Show Persons</button>
         <Cockpit
+          appTitle={this.props.title}
           showpersons={this.state.showPersons}
           persons={this.state.persons}
           clicked={this.togglePersonsHandler} />
         {persons}
-      </div>
+      </Aux>
     );
   }
 }
 
-export default App;
+export default withClass(App, classes.App);
