@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import classes from './Person.module.css';
 import withClass from '../../../hoc/withClass';
 import Aux from '../../../hoc/Aux';
+import PropTypes from 'prop-types';
 
 class Person extends Component {
   // CONSTRUCTOR
@@ -28,5 +29,13 @@ class Person extends Component {
     )
   }
 }
+ 
+// validate props using PropTypes
+Person.propTypes = {
+  click:  PropTypes.func,
+  name: PropTypes.string,
+  age: PropTypes.number,
+  changed: PropTypes.func
+};
 
 export default withClass(Person, classes.Person);

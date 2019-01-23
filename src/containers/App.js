@@ -10,12 +10,13 @@ class App extends PureComponent {
     super(props);
     this.state = {
       persons: [
-        { id: "iyfr", name:"Manolo", age:"23" },
-        { id: "r", name:"Nadia", age:"34" },
-        { id: "ir", name:"Camper", age:"12" }
+        { id: "iyfr", name:"Manolo", age: 23 },
+        { id: "r", name:"Nadia", age: 34 },
+        { id: "ir", name:"Camper", age: 12 }
       ],
       otherState: 'different value here',
-      showPersons: false
+      showPersons: false,
+      toggleClicked: 0
     };
   }
 
@@ -74,10 +75,14 @@ WithClass
   // conditional test handler
   togglePersonsHandler = () => {
     const doesShow = this.state.showPersons;
-    // showPersons equals doesShow is not
-    // when this changes the other parts of state (persons and otherState)
-    // will just untouched: merged!!
-    this.setState({showPersons: !doesShow});
+    // never change state by using this.state inside setState
+    // because setState runs asynchronously and is not accurate
+    this.setState( (prevState, props) => {
+      return {
+        showPersons: !doesShow,
+        toggleClicked: prevState.toggleClicked + 1
+      }
+    });
   }
 
   // render DOM
