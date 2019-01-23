@@ -3,7 +3,9 @@ import classes from './App.module.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 import Aux from '../hoc/Aux';
-import withClass from '../hoc/withClass';
+import withClass from '../hoc/WithClass';
+
+export const AuthContext = React.createContext(false);
 
 class App extends PureComponent {
   constructor(props) {
@@ -16,7 +18,8 @@ class App extends PureComponent {
       ],
       otherState: 'different value here',
       showPersons: false,
-      toggleClicked: 0
+      toggleClicked: 0,
+      authenticated: false
     };
   }
 
@@ -37,6 +40,21 @@ class App extends PureComponent {
   conponentWillUpdate () {
     console.log("<< APP WILL UPDATE ====== conponentWillUpdate")
   }
+  //
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.log(
+      "<< APP |||16.6|||  gerDerivedStateFromProps",
+      nextProps,
+      prevState);
+
+      return prevState;
+  }
+  //
+  getSnapshotBeforeUpdate() {
+    console.log("<< APP |||16.6|||  getSnapshotBeforeUpdate");
+    return null;
+  }
+
   componentDidUpdate () {
     console.log("<< APP DID UPDATE ====== conponentDidUpdate")
   }
@@ -71,7 +89,7 @@ class App extends PureComponent {
     // which was updated by splicing one element?
     this.setState({persons: persons});
   }
-WithClass
+
   // conditional test handler
   togglePersonsHandler = () => {
     const doesShow = this.state.showPersons;
@@ -85,6 +103,10 @@ WithClass
     });
   }
 
+  loginHandler = () => {
+    this.setState({authenticated: true});
+  }
+
   // render DOM
   render() {
     // using javascript for conditional DOM
@@ -94,7 +116,7 @@ WithClass
       persons = <Persons
             persons={this.state.persons}
             clicked={this.deletePersonHandler}
-            changed={this.nameChangeHandler} />;
+            changed={this.nameChangeHandler}  />;
     }
 
     // DOM NOW!
@@ -105,8 +127,11 @@ WithClass
           appTitle={this.props.title}
           showpersons={this.state.showPersons}
           persons={this.state.persons}
+          login={this.loginHandler}
           clicked={this.togglePersonsHandler} />
-        {persons}
+        <AuthContext.Provider value={this.state.authenticated}>
+          {persons}
+        </AuthContext.Provider>
       </Aux>
     );
   }

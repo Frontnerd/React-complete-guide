@@ -5,7 +5,8 @@ class Persons extends PureComponent {
   // CONSTRUCTOR
   constructor(props) {
     super(props);
-    console.log("1 CONTRUCTOR PERSONS ======="+props)
+    console.log("1 CONTRUCTOR PERSONS ======="+props);
+    this.lastPersonRef = React.createRef();
   }
 
   // MOUNT
@@ -14,6 +15,7 @@ class Persons extends PureComponent {
   }
   componentDidMount () {
     console.log("4 PERSONS ======= componentDidMount");
+    this.lastPersonRef.current.focus();
   }
 
   // UPDATE
@@ -44,7 +46,9 @@ class Persons extends PureComponent {
       return <Person
         click={() => this.props.clicked(index)}
         name={person.name}
+        position={index}
         age={person.age}
+        ref={this.lastPersonRef}
         key={person.id}
         changed={( event ) => this.props.changed(event, person.id)} />;
     } );
